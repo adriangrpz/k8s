@@ -38,4 +38,16 @@ spec:
         - name: um-db-creation-script
           configMap:
             name: um-db-creation-script
-            
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+  clusterIP: None

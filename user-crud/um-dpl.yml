@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: usermgmt-microservice
+  labels:
+    app: usermgmt-restapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usermgmt-restapp
+  template:  
+    metadata:
+      labels: 
+        app: usermgmt-restapp
+    spec:
+      containers:
+        - name: usermgmt-restapp
+          image: gcr.io/scientific-mesh-363600/eks-study/ebs 
+          ports: 
+            - containerPort: 8095           
+          env:
+            - name: DB_HOSTNAME
+              value: "mysql-svc" 
+            - name: DB_PORT
+              value: "3306"            
+            - name: DB_NAME
+              value: "um"            
+            - name: DB_USERNAME
+              value: "root"            
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-pass
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: um-svc
+spec:
+  selector:
+    app: usermgmt-restapp
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8095
