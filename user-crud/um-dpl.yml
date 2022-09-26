@@ -21,13 +21,25 @@ spec:
             - containerPort: 8095           
           env:
             - name: DB_HOSTNAME
-              value: "mysql-svc" 
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-host
             - name: DB_PORT
-              value: "3306"            
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-port
             - name: DB_NAME
-              value: "um"            
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-name
             - name: DB_USERNAME
-              value: "root"            
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
